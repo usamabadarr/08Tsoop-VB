@@ -8,14 +8,14 @@ import Wheel from "./Wheel.js";
 // define the Cli class
 class Cli {
   // TODO: update the vehicles property to accept Truck and Motorbike objects as well
+  vehicles: (Car | Truck | Motorbike)[]; //Updated
   // TODO: You will need to use the Union operator to define additional types for the array
   // TODO: See the AbleToTow interface for an example of how to use the Union operator
-  vehicles: (Car)[];
   selectedVehicleVin: string | undefined;
   exit: boolean = false;
 
   // TODO: Update the constructor to accept Truck and Motorbike objects as well
-  constructor(vehicles: (Car)[]) {
+  constructor(vehicles: (Car | Truck | Motorbike)[]) { //Updated
     this.vehicles = vehicles;
   }
 
@@ -61,17 +61,23 @@ class Cli {
           name: 'vehicleType',
           message: 'Select a vehicle type',
           // TODO: Update the choices array to include Truck and Motorbike
-          choices: ['Car'],
+          choices: ['Car', 'Truck', 'Motorbike'],
         },
       ])
       .then((answers) => {
         if (answers.vehicleType === 'Car') {
           // create a car
           this.createCar();
-        }
         // TODO: add statements to create a truck or motorbike if the user selects the respective vehicle type
+        } else if (answers.vehicleType === 'Truck') {
+        // create a truck
+        this.createTruck();
+        } else {
+          // create a motorbike
+          this.createMotorbike();
+          }
       });
-  }
+      }
 
   // method to create a car
   createCar(): void {
@@ -171,10 +177,26 @@ class Cli {
       ])
       .then((answers) => {
         // TODO: Use the answers object to pass the required properties to the Truck constructor
+        // const truck = new Truck(
+          Cli.generateVin(),
+          answers.color,
+          answers.make,
+          answers.model,
+          parseInt(answers.year),
+          parseInt(answers.weight),
+          parseInt(answers.topSpeed),
+          parseInt(answers.towingCapacity),
+          []
+           });
         // TODO: push the truck to the vehicles array
+        this.vehicles.push(truck);
+
         // TODO: set the selectedVehicleVin to the vin of the truck
+        this.selectedVehicleVin = truck.vin;
+
         // TODO: perform actions on the truck
-      });
+        this.performActions();
+      };
   }
 
   // method to create a motorbike
@@ -234,15 +256,30 @@ class Cli {
       ])
       .then((answers) => {
         // TODO: Use the answers object to pass the required properties to the Motorbike constructor
+        // const motorbike = new Motorbike(
+        Cli.generateVin(),
+        answers.color,
+        answers.make,
+        answers.model,
+        parseInt(answers.year),
+        parseInt(answers.weight),
+        parseInt(answers.topSpeed),
+        new Wheel(parseInt(answers.frontWheelDiameter), answers.frontWheelBrand),
+        new Wheel(parseInt(answers.rearWheelDiameter), answers.rearWheelBrand)
+        });
         // TODO: push the motorbike to the vehicles array
+        this.vehicles.push(motorbike);
+
         // TODO: set the selectedVehicleVin to the vin of the motorbike
+        this.selectedVehicleVin = motorbike.vin();
+
         // TODO: perform actions on the motorbike
-      });
-  }
+        this.performActions();
+        };
 
   // method to find a vehicle to tow
   // TODO: add a parameter to accept a truck object
-  findVehicleToTow(): void {
+  findVehicleToTow(truck: Truck): void {
     inquirer
       .prompt([
         {
@@ -257,10 +294,23 @@ class Cli {
           }),
         },
       ])
+
       .then((answers) => {
+
         // TODO: check if the selected vehicle is the truck
+        const vehicleToTow = answers.vehicleToTow;
+        if (vehicleToTow) {
+
         // TODO: if it is, log that the truck cannot tow itself then perform actions on the truck to allow the user to select another action
+        if (vehicleToTow instanceof Truck) {
+          console.log('A truck cannot tow another truck.');
+        
         // TODO: if it is not, tow the selected vehicle then perform actions on the truck to allow the user to select another action
+      } else {
+        truck.tow(vehicleToTow);
+      }
+      this.performActions();
+    }
       });
   }
 
@@ -282,6 +332,8 @@ class Cli {
             'Turn right',
             'Turn left',
             'Reverse',
+            'Tow a vehicle',
+            'Perform a wheelie',
             'Select or create another vehicle',
             'Exit',
           ],
@@ -346,9 +398,25 @@ class Cli {
             }
           }
         }
+      
         // TODO: add statements to perform the tow action only if the selected vehicle is a truck. Call the findVehicleToTow method to find a vehicle to tow and pass the selected truck as an argument. After calling the findVehicleToTow method, you will need to return to avoid instantly calling the performActions method again since findVehicleToTow is asynchronous.
+        else if (answers.action === 'Tow') {
+          if (this.selectedVehicleType === 'truck') {
+            this.findVehicleToTow(this.selectedVehicleVin).then(() => {
+              return;
+            });
+          }
         // TODO: add statements to perform the wheelie action only if the selected vehicle is a motorbike
-        else if (answers.action === 'Select or create another vehicle') {
+        } else if (answers.action === 'Wheelie') {
+          if (this.selectedVehicleType === 'motorbike') {
+            for (let i = 0; i < this.vehicles.length; i++) {
+              if (this.vehicles[i].vin === this.selectedVehicleVin) {
+                this.vehicles[i].wheelie();
+            }
+          }
+        }
+          
+        } else if (answers.action === 'Select or create another vehicle') {
           // start the cli to return to the initial prompt if the user wants to select or create another vehicle
           this.startCli();
           return;
@@ -381,10 +449,10 @@ class Cli {
           this.createVehicle();
         } else {
           this.chooseVehicle();
+        
         }
       });
   }
-}
 
 // export the Cli class
 export default Cli;
