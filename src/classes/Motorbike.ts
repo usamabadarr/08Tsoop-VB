@@ -48,18 +48,18 @@ import Wheel from './Wheel.js';
     this.year = year;
     this.weight = weight;
     this.topSpeed = topSpeed;
-    this.frontWheel = frontWheel;
-    this.rearWheel = rearWheel;
+    this.frontWheel = frontWheel || new Wheel();
+    this.rearWheel = rearWheel || new Wheel(); 
   }
 
+
   // TODO: The constructor should check if the wheels array has 2 elements and create 2 new default Wheel objects if it does not
-  if (!this.frontWheel) {
-    this.frontWheel = new Wheel(); // or provide default values
-  }
-  if (!this.rearWheel) {
-    this.rearWheel = new Wheel(); // or provide default values
-  }
-}
+//   if (!this.frontWheel) {
+//     this.frontWheel = new Wheel(); // or provide default values
+//   }
+//   if (!this.rearWheel) {
+//     this.rearWheel = new Wheel(); // or provide default values
+//   }
 
   // TODO: Implement the wheelie method
   performWheelie(): void {
@@ -68,7 +68,7 @@ import Wheel from './Wheel.js';
     // TODO: The method should log the message "Motorbike [make] [model] is doing a wheelie!"
 
   // TODO: Override the printDetails method from the Vehicle class
-  printDetails(): void {
+  override printDetails(): void {
 
   // TODO: The method should call the printDetails method of the parent class
   super.printDetails();
@@ -81,9 +81,12 @@ import Wheel from './Wheel.js';
   console.log(`Weight: ${this.weight}`);
   console.log(`Top Speed: ${this.topSpeed}`);
   console.log(`Color: ${this.color}`);
-  console.log(`Front Wheel: ${this.frontWheel.diameter} inches, ${this.frontWheel.brand}`);
-  console.log(`Rear Wheel: ${this.rearWheel.diameter} inches, ${this.rearWheel.brand}`);
+  console.log(`Front Wheel: ${this.frontWheel}`);
+  console.log(`Rear Wheel: ${this.rearWheel}`);
+  // console.log(`Front Wheel: ${this.frontWheel.diameter} inches, ${this.frontWheel.brand}`);
+  // console.log(`Rear Wheel: ${this.rearWheel.diameter} inches, ${this.rearWheel.brand}`);
   }
+}
   // TODO: The details should include the VIN, make, model, year, weight, top speed, color, and wheels
 
 // Export the Motorbike class as the default export

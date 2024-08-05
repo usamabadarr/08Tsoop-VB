@@ -6,7 +6,7 @@ import Wheel from './Wheel.js';
 import AbleToTow from '../interfaces/AbleToTow.js';
 
 // TODO: The Truck class should extend the Vehicle class and should implement the AbleToTow interface
-class Truck extends Vehicle implements AbletoTow {
+class Truck extends Vehicle implements AbleToTow {
 
   // TODO: Declare properties of the Truck class
 // Declare properties of the Truck class
@@ -80,11 +80,10 @@ towingCapacity: number;
       console.log(`The ${vehicle.make} ${vehicle.model} is too heavy to be towed by the Truck.`);
     }
   }
-  }
 
   // TODO: Override the printDetails method from the Vehicle class
   // Override the printDetails method from the Vehicle class
-  printDetails(): void {
+  override printDetails(): void {
 
     // TODO: The method should call the printDetails method of the parent class
     // Call the printDetails method of the parent class
@@ -102,6 +101,7 @@ towingCapacity: number;
     console.log(`Towing Capacity: ${this.towingCapacity}`);
     console.log(`Wheels: ${this.wheels.length} wheels`);
   }
+}
     // TODO: The details should include the VIN, make, model, year, weight, top speed, color, towing capacity, and wheels
 
 // Export the Truck class as the default export
