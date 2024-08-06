@@ -32,7 +32,7 @@ import Wheel from './Wheel.js';
     weight: number,
     topSpeed: number,
     frontWheel: Wheel,
-    rearWheel: Wheel
+    rearWheel: Wheel,
   ) {
 
     // TODO: The constructor should call the constructor of the parent class, Vehicle
