@@ -29,7 +29,7 @@ To get started with the Vehicle Management CLI, follow these steps:
 
 1) Clone the repository:
     
-    ```htm
+    ```
     git clone https://github.com/usamabadarr/08Tsoop-VB.git
     ```
     
